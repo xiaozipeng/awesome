@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import getApiDomain from '../../config/config';
+import { setToken } from '../../util/token';
 
-const Login = ({ setToken }) => {
+const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-
-  const handleLogin = () => {
-    // 模拟登录逻辑
-    if (username && password && verificationCode) {
-      setToken('fake-token'); // 假设登录成功，设置 token
-    } else {
-      alert('请输入完整信息');
-    }
+  const domain = getApiDomain();
+  const url = `${domain}/api/v1/login`;
+  const handleLogin = async () => {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({ username, password, code: verificationCode }),
+    });
+    const data = await response.json();
+    console.log(data);
+    // todo delete;
+    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhc2NvcGUiOiIiLCJkZXB0SWQiOjEsImV4cCI6MTczNTIyOTA2NCwiaWRlbnRpdHkiOjEwMywibmljZSI6Inh6cCIsIm9yaWdfaWF0IjoxNzM1MjAwMjY0LCJyb2xlaWQiOjEsInJvbGVrZXkiOiJhZG1pbiIsInJvbGVuYW1lIjoi57O757uf566h55CG5ZGYIn0.gkYaOz95YHgYKeLrVlg0j2fgQNB_XzrE-zE6m2fitB0`
+    await setToken(token);
+    navigation.navigate('StockList');
   };
 
   return (

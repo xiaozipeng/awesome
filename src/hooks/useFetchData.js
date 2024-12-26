@@ -1,18 +1,16 @@
 // store.js
 import { useState, useEffect, useCallback } from 'react';
-
-const token = ``;  // 你可以根据需要调整 token 的来源
-// 自定义 hook，接收 URL 和 token 参数
+import { getToken } from '../util/token';
 export const useFetchData = (url) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = useCallback(() => {
+  const fetchData = useCallback(async () => {
     if (!url) return;
     setLoading(true);
     setError(null);
-
+    const token = await getToken(); // 获取 token
     fetch(url, {
       method: 'GET',
       headers: {
