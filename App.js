@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Toast from 'react-native-toast-message';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -30,9 +31,10 @@ const App = () => {
           <Stack.Screen
             name="StockList"
             component={StockList}
-            options={{headerShown: true, title: 'Stock List'}}
+            options={{headerShown: true, title: '涨停列表'}}
           />
         </Stack.Navigator>
+        <Toast />
       </SafeAreaView>
     </NavigationContainer>
   );

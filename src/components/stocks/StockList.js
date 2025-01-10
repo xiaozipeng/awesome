@@ -61,14 +61,14 @@ const StockList = () => {
   const renderItem = ({ item }) => {
     return (
       <LinearGradient
-        colors={['#4c669f', '#3b5998', '#192f5d']}
+        colors={['#ff7e5f', '#feb47b']}
         style={styles.itemContainer}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}>
         <View style={styles.itemContent}>
           <Text style={styles.title}>{item.secu_abbr}</Text>
           <Text style={styles.subtitle}>行业: {item.industry}</Text>
-          <Text style={styles.subtitle}>首板时间: {item.first_time_str}</Text>
+          <Text style={styles.subtitle}>首板时间: {item.created}</Text>
           <Text style={styles.subtitle}>涨幅: {item.latest_increase}%</Text>
           <Text style={styles.subtitle}>几天几板: {item.continue_num_str}</Text>
           <Text style={styles.subtitle}>

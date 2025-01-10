@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import getApiDomain from '../../config/config';
-import { setToken } from '../../util/token';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getPhoneCode, login } from '../../services/index';
+import CountdownButton from '../CountdownButton';
+import Toast from 'react-native-toast-message';
 
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const domain = getApiDomain();
-  const url = `${domain}/api/v1/login`;
-  const handleLogin = async () => {
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({ username, password, code: verificationCode }),
+  const [phone_code, setPhone_code] = useState('');
+  const handleLogin = () => {
+    login({ username, password, phone_code })
+    .then(() => {
+      Toast.show({
+        type: 'success',
+        position: 'center',
+        text1: '登录成功',
+      });
+      navigation.navigate('StockList');
+    })
+    .catch((error) => {
+      Toast.show({
+        type: 'error',
+        position: 'center',
+        text1: '登录失败',
+        text2: error.message || '请稍后重试',
+      });
     });
-    const data = await response.json();
-    console.log(data);
-    // todo delete;
-    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhc2NvcGUiOiIiLCJkZXB0SWQiOjEsImV4cCI6MTczNTIyOTA2NCwiaWRlbnRpdHkiOjEwMywibmljZSI6Inh6cCIsIm9yaWdfaWF0IjoxNzM1MjAwMjY0LCJyb2xlaWQiOjEsInJvbGVrZXkiOiJhZG1pbiIsInJvbGVuYW1lIjoi57O757uf566h55CG5ZGYIn0.gkYaOz95YHgYKeLrVlg0j2fgQNB_XzrE-zE6m2fitB0`
-    await setToken(token);
-    navigation.navigate('StockList');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>登录</Text>
+      <Text style={styles.title}>登录1</Text>
       <TextInput
         style={styles.input}
         placeholder="用户名"
@@ -38,14 +44,19 @@ const Login = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="手机验证码"
-        keyboardType="numeric"
-        value={verificationCode}
-        onChangeText={setVerificationCode}
-      />
-      <Button title="登录" onPress={handleLogin} />
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <TextInput
+          style={{flex: 1, ...styles.input, marginRight: 10}}
+          placeholder="手机验证码"
+          keyboardType="numeric"
+          value={phone_code}
+          onChangeText={setPhone_code}
+        />
+        <CountdownButton label="获取" countdown={60} callback={() => getPhoneCode({username: username})} />
+      </View>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>登录</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -68,6 +79,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 8,
     borderRadius: 4,
+  },
+  loginButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
   },
 });
 
