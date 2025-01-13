@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>登录1</Text>
+      <Text style={styles.title}>登录</Text>
       <TextInput
         style={styles.input}
         placeholder="用户名"
