@@ -5,7 +5,7 @@ import { useFetchData } from '../../hooks/useFetchData'; // 导入自定义 hook
 import getApiDomain from '../../config/config';
 const domain = getApiDomain();
 
-const StockList = () => {
+const StockList = ({navigation}) => {
   const [page, setPage] = useState(1); // 初始化页码
   const pageSize = 10; // 每页显示的数据量
   const [allData, setAllData] = useState([]); // 存储所有加载的数据
@@ -15,6 +15,12 @@ const StockList = () => {
   const url = `${domain}/api/v1/dxsf/dragon/up_down/list?category=1&sort_key=id&page_index=${page}&page_size=${pageSize}`;
 
   const { data, loading, error, refetch } = useFetchData(url);
+  // {"code":401,"msg":"Token is expired"}
+  useEffect(() => {
+    if (data?.code === 401) {
+      navigation.navigate('Login'); // 跳转到登录页面
+    }
+  }, [data, navigation]);
 
   const handleLoadMore = useCallback(() => {
     if (!loading && data?.data?.list?.length > 0) {

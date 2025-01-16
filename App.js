@@ -1,23 +1,35 @@
 import React, {useState, useEffect} from 'react';
+import {SafeAreaView, StyleSheet, ActivityIndicator, View} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {SafeAreaView, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import StockList from './src/components/stocks/StockList'; // 根据实际路径导入
-import Login from './src/components/auth/Login'; // 根据实际路径导入
+import StockList from './src/components/stocks/StockList';
+import Login from './src/components/auth/Login';
 import {getToken} from './src/util/token';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [token, setToken] = useState(null); // token 用于模拟登录状态
+  const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // 标记加载状态
+
   useEffect(() => {
-    const token = async () => {
-      const token = await getToken();
-      setToken(token);
+    const fetchToken = async () => {
+      const storedToken = await getToken();
+      console.log('token:', storedToken);
+      setToken(storedToken);
+      setIsLoading(false);
     };
-    token();
+    fetchToken();
   }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
@@ -43,6 +55,12 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1, // 确保 SafeAreaView 填满整个屏幕
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5', // 背景颜色
   },
 });
 
