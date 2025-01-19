@@ -13,7 +13,7 @@ const Login = ({navigation}) => {
     .then(() => {
       Toast.show({
         type: 'success',
-        position: 'center',
+        position: 'top',
         text1: '登录成功',
       });
       navigation.navigate('StockList');
@@ -21,7 +21,7 @@ const Login = ({navigation}) => {
     .catch((error) => {
       Toast.show({
         type: 'error',
-        position: 'center',
+        position: 'top',
         text1: '登录失败',
         text2: error.message || '请稍后重试',
       });

@@ -25,7 +25,7 @@ const CountdownButton = ({label = '获取', countdown = 60, callback}) => {
       }
       Toast.show({
         type: 'success',
-        position: 'center',
+        position: 'top',
         text1: '已发送验证码',
       });
       const timer = setInterval(() => {
